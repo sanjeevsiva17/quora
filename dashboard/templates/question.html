@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question</title>
+</head>
+<body>
+
+<h1>{{question.question_text}}</h1>
+
+{% for answer in answers %}
+    <p>
+        user: {{ answer.user.username }}
+        <br>
+        answer: {{answer.answer_text}}
+
+    </p>
+    <br>
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+
+<a href="{% url 'add_question' %}">Add a question</a>
+<br>
+{% for question in questions %}
+    <a href="/dashboard/{{question.id}}">
+        question: {{question.question_text}}
+    </a>
+    <br>
+{% endfor %}
+
+</body>
+</html>
