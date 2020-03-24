@@ -26,4 +26,5 @@ class Answer(TimeStampMixin):
 class Vote(TimeStampMixin):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    count = models.IntegerField(default=0)
+    # count = models.IntegerField(default=0)
+

@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Question, Answer
 from .forms import QuestionForm, AnswerForm
-
+from django.contrib import messages
 
 def index(request):
     questions = Question.objects.all()
@@ -19,28 +19,46 @@ def question(request, question_id):
 
 
 def add_question(request):
-    if request.method == "POST":
-        form = QuestionForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user = request.user
-            post.save()
-            return redirect('index')
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = QuestionForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.user = request.user
+                post.save()
+                return redirect('index')
+        else:
+            form = QuestionForm()
+        context = {'form': form}
+        return render(request, 'question_form.html', context)
     else:
-        form = QuestionForm()
-    context = {'form': form}
-    return render(request, 'question_form.html', context)
+        messages.info(request, "Login to add question")
+        return redirect('login')
 
 
-def add_answer(request):
-    if request.method == "POST":
-        form = AnswerForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user = request.user
-            post.save()
-            return redirect('index')
+def add_answer(request, question_id):
+    if request.user.is_authenticated:
+        ques = get_object_or_404(Question, pk=question_id)
+        if request.method == "POST":
+            form = AnswerForm(request.POST)
+            if form.is_valid():
+                ans = form.save(commit=False)
+                ans.user = request.user
+                ans.question = ques
+                ans.save()
+                return redirect('index')
+        else:
+            form = AnswerForm()
+        context = {'form': form, 'question':ques}
+        return render(request, 'answer_form.html', context)
     else:
-        form = AnswerForm()
-    context = {'form': form}
-    return render(request, 'answer_form.html', context)
+        messages.info(request, "Login to answer")
+        return redirect('login')
+
+
+def votes(request):
+    if request.user.is_authenticated:
+        pass
+    else:
+        messages.info(request, "Login to vote")
+        return redirect('login')

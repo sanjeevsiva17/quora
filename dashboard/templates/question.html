@@ -5,10 +5,12 @@
     <title>Question</title>
 </head>
 <body>
+<a href="/accounts/logout">Logout</a>
 
 <h1>{{question.question_text}}</h1>
 
-<a href="{% url 'add_answer' %}">Add your answer</a>
+<a href="{{ question.id }}/answer/">Add your answer</a>
+
 <br>
 {% for answer in answers %}
     <p>
@@ -17,6 +19,12 @@
         answer: {{answer.answer_text}}
 
     </p>
+
+    <Form method="POST" action="">
+        {% csrf_token %}
+        <input type="submit" name="upvote" value="upvote">
+    </Form>
+
     <br>
 {% endfor %}
 
