@@ -8,6 +8,8 @@
 
 <h1>{{question.question_text}}</h1>
 
+<a href="{% url 'add_answer' %}">Add your answer</a>
+<br>
 {% for answer in answers %}
     <p>
         user: {{ answer.user.username }}
