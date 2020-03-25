@@ -1,32 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Question</title>
-</head>
-<body>
-<a href="/accounts/logout">Logout</a>
 
-<h1>{{question.question_text}}</h1>
-
-<a href="{{ question.id }}/answer/">Add your answer</a>
+{% extends 'base.html' %}
+{% block content %}
 
 <br>
-{% for answer in answers %}
-    <p>
-        user: {{ answer.user.username }}
-        <br>
-        answer: {{answer.answer_text}}
-
-    </p>
-
-    <Form method="POST" action="">
-        {% csrf_token %}
-        <input type="submit" name="upvote" value="upvote">
-    </Form>
-
     <br>
-{% endfor %}
+    <br>
 
-</body>
-</html>
+<div class="container">
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col">
+      <h3>{{question.question_text}}</h3>
+        <br>
+        <br>
+        <br>
+        {% for answer in answers %}
+            <p>
+                user: {{ answer.user.username }}
+                <br>
+                answer: {{answer.answer_text}}
+
+            </p>
+
+            <Form method="POST" action="">
+                {% csrf_token %}
+                <input type="submit" name="upvote" value="upvote">
+            </Form>
+
+            <br>
+        {% endfor %}
+
+    </div>
+    <div class="col">
+        <a href="{{ question.id }}/answer/">Add your answer</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

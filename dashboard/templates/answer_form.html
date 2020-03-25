@@ -1,12 +1,29 @@
-<h1>Add Answer</h1>
+{% extends 'base.html' %}
+{% block content %}
 
-<p>
-<a href="/accounts/logout">Logout</a>
-</p>>
-<h1>{{question.question_text}}</h1>
+        <br>
+        <br>
+        <br>
 
-<Form method="POST" action="">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" name="Add">
-</Form>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col">
+        <h2 style="text-align: center">Add Answer</h2>
+        <br>
+
+        <h4>{{question.question_text}}</h4>
+        <Form method="POST" action="">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" name="Add">
+        </Form>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+</div>
+
+{% endblock %}
