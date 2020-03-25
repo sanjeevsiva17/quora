@@ -28,3 +28,8 @@ class Vote(TimeStampMixin):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # count = models.IntegerField(default=0)
 
+
+class Comment(TimeStampMixin):
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment_text = models.CharField(max_length=2000)

@@ -15,17 +15,32 @@
         <br>
         <br>
         <br>
-        {% for answer in answers %}
+        {% for answer,comments in final_answer.items %}
             <p>
                 user: {{ answer.user.username }}
                 <br>
                 answer: {{answer.answer_text}}
 
+
+
+                {% for comm in comments.0 %}
+                    <br>
+                    user: {{ comm.user.username }}
+                    <br>
+                    comments: {{ comm.comment_text }}
+                    <br>
+                    votes: {{comments.1}}
+                    <input type="button" name="upvote" value="upvote" onclick=vote({{request.user.id}},{{answer.id}})>
+
+                    {% endfor %}
             </p>
+
 
             <Form method="POST" action="">
                 {% csrf_token %}
-                <input type="submit" name="upvote" value="upvote">
+                {{form.as_p}}
+                <input type="text" style="visibility: hidden" name="answer_id" value="{{ answer.id }}">
+                <input type="submit" name="comment" value="comment">
             </Form>
 
             <br>
@@ -33,7 +48,11 @@
 
     </div>
     <div class="col">
-        <a href="{{ question.id }}/answer/">Add your answer</a>
+        {% if editable == True %}
+            <a href="{{ question.id }}/edit/">Edit your answer</a>
+        {% else %}
+            <a href="{{ question.id }}/answer/">Add your answer</a>
+        {% endif %}
     </div>
   </div>
 </div>

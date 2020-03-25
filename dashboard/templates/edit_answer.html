@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+        <br>
+        <br>
+        <br>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col">
+        <h2 style="text-align: center">Edit Answer</h2>
+        <br>
+
+        <h4>{{question.question_text}}</h4>
+        <Form method="POST" action="">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" name="Add">
+        </Form>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+</div>
+
+{% endblock %}
