@@ -122,3 +122,12 @@ def upvotes(request):
     else:
         messages.info(request, "Login to vote")
         return redirect('login')
+
+
+def user_profile(request):
+    user_data = request.user
+    user_questions = Question.objects.filter(user_id=user_data.id)
+    user_answers = Answer.objects.filter(user_id=user_data.id)
+    user_comments = Comment.objects.filter(user_id=user_data.id)
+    context = {"user_data" : user_data, "user_questions" : user_questions, "user_answers":user_answers, "user_comments":user_comments}
+    return render(request, "user_profile.html", context)

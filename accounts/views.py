@@ -35,7 +35,6 @@ def loginPage(request):
     context = {}
     return render(request, 'login.html', context)
 
-
 def logoutPage(request):
     logout(request)
     return redirect('index')

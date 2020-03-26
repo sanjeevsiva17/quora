@@ -10,5 +10,7 @@ urlpatterns = [
     path('<int:question_id>/edit/', views.edit_answer, name='edit_answer'),
     path('<int:question_id>/delete_question/', views.delete_question, name='delete_question'),
     path('<int:answer>/delete_answer/', views.delete_answer, name='delete_answer'),
-    path('answer/upvote/', views.upvotes, name='upvotes')
+    path('answer/upvote/', views.upvotes, name='upvotes'),
+    path('profile/', views.user_profile, name='user_profile')
+
 ]

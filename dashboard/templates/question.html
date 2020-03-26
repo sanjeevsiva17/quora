@@ -16,24 +16,23 @@
         <br>
         <br>
         {% for answer,comments in final_answer.items %}
-            <p>
+                <div>
                 user: {{ answer.user.username }}
                 <br>
                 answer: {{answer.answer_text}}
+                <br>
+                </div>
 
-
-
-                {% for comm in comments.0 %}
-                    <br>
-                    user: {{ comm.user.username }}
-                    <br>
-                    comments: {{ comm.comment_text }}
-                    <br>
-                    votes: {{comments.1}}
-                    <input type="button" name="upvote" value="upvote" onclick=vote({{request.user.id}},{{answer.id}})>
-
+                <div>
+                    {% for comm in comments.0 %}
+                        <br>
+                            user: {{ comm.user.username }}
+                            comments: {{ comm.comment_text }}
+                        <br>
+                            votes: {{comments.1}}
+                            <input type="button" name="upvote" value="upvote" onclick=vote({{request.user.id}},{{answer.id}})>
                     {% endfor %}
-            </p>
+            </div>
 
 
             <Form method="POST" action="">
