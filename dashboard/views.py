@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.http import HttpResponse
 from .models import Question, Answer, Comment, Vote
@@ -40,7 +40,7 @@ def question(request, question_id):
     return render(request, 'question.html',
                   {"question": question, "editable": editable, "form": form, "final_answer": final_answer})
 
-
+@login_required(login_url='/accounts/login/')
 def add_question(request):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -58,7 +58,7 @@ def add_question(request):
         messages.info(request, "Login to add question")
         return redirect('login')
 
-
+@login_required(login_url='/accounts/login/')
 def add_answer(request, question_id):
     if request.user.is_authenticated:
         ques = get_object_or_404(Question, pk=question_id)
@@ -78,7 +78,7 @@ def add_answer(request, question_id):
         messages.info(request, "Login to answer")
         return redirect('login')
 
-
+@login_required(login_url='/accounts/login/')
 def edit_answer(request, question_id):
     if request.user.is_authenticated:
         ques = get_object_or_404(Question, pk=question_id)
@@ -99,14 +99,13 @@ def edit_answer(request, question_id):
         messages.info(request, "Login to answer")
         return redirect('login')
 
-
+@login_required(login_url='/accounts/login/')
 def delete_answer(request, answer_id):
     Answer.objects.filter(id=answer_id).delete()
 
-
+@login_required(login_url='/accounts/login/')
 def delete_question(request, question_id):
     Question.objects.filter(id=question_id).delete()
-
 
 def upvotes(request):
     if request.user.is_authenticated:
@@ -123,7 +122,7 @@ def upvotes(request):
         messages.info(request, "Login to vote")
         return redirect('login')
 
-
+@login_required(login_url='/accounts/login/')
 def user_profile(request):
     user_data = request.user
     user_questions = Question.objects.filter(user_id=user_data.id)
