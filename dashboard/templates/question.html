@@ -22,15 +22,16 @@
                 answer: {{answer.answer_text}}
                 <br>
                 </div>
-
+                <br>
+                <div>
+                      votes: <label id="votes-{{ answer.id }}">{{comments.1}}</label>
+                    <input type="button" name="upvote" value="upvote" onclick=vote({{request.user.id}},{{answer.id}})>
+                </div>
                 <div>
                     {% for comm in comments.0 %}
                         <br>
                             user: {{ comm.user.username }}
                             comments: {{ comm.comment_text }}
-                        <br>
-                            votes: {{comments.1}}
-                            <input type="button" name="upvote" value="upvote" onclick=vote({{request.user.id}},{{answer.id}})>
                     {% endfor %}
             </div>
 

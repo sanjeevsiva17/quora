@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from .models import Question, Answer, Comment, Vote
 from .forms import QuestionForm, AnswerForm, CommentForm
 from django.contrib import messages
-
+import json
 
 def index(request):
     questions = Question.objects.all()
@@ -40,6 +40,7 @@ def question(request, question_id):
     return render(request, 'question.html',
                   {"question": question, "editable": editable, "form": form, "final_answer": final_answer})
 
+
 @login_required(login_url='/accounts/login/')
 def add_question(request):
     if request.user.is_authenticated:
@@ -57,6 +58,7 @@ def add_question(request):
     else:
         messages.info(request, "Login to add question")
         return redirect('login')
+
 
 @login_required(login_url='/accounts/login/')
 def add_answer(request, question_id):
@@ -77,6 +79,7 @@ def add_answer(request, question_id):
     else:
         messages.info(request, "Login to answer")
         return redirect('login')
+
 
 @login_required(login_url='/accounts/login/')
 def edit_answer(request, question_id):
@@ -99,28 +102,44 @@ def edit_answer(request, question_id):
         messages.info(request, "Login to answer")
         return redirect('login')
 
+
 @login_required(login_url='/accounts/login/')
 def delete_answer(request, answer_id):
     Answer.objects.filter(id=answer_id).delete()
+    return redirect('user_profile')
+
 
 @login_required(login_url='/accounts/login/')
 def delete_question(request, question_id):
     Question.objects.filter(id=question_id).delete()
+    return redirect('user_profile')
 
+
+@login_required(login_url='/accounts/login/')
+def delete_comment(request, comment_id):
+    Comment.objects.filter(id=comment_id).delete()
+    return redirect('user_profile')
+
+
+@login_required(login_url='/accounts/login/')
 def upvotes(request):
     if request.user.is_authenticated:
-        user_id =  request.POST.get("user")
+        user_id = request.POST.get("user")
         answer_id = request.POST.get("answer")
         vote = Vote.objects.filter(answer_id=answer_id, user_id=user_id)
         if vote.exists():
             vote.delete()
-            return HttpResponse("deleted")
+            msg = "deleted"
+            # return HttpResponse()
         else:
             Vote.objects.create(answer_id=answer_id, user_id=user_id)
-            return HttpResponse("created")
+            msg = "created"
+        js = {"message": msg}
+        return HttpResponse(json.dumps(js))
     else:
         messages.info(request, "Login to vote")
         return redirect('login')
+
 
 @login_required(login_url='/accounts/login/')
 def user_profile(request):
@@ -128,5 +147,6 @@ def user_profile(request):
     user_questions = Question.objects.filter(user_id=user_data.id)
     user_answers = Answer.objects.filter(user_id=user_data.id)
     user_comments = Comment.objects.filter(user_id=user_data.id)
-    context = {"user_data" : user_data, "user_questions" : user_questions, "user_answers":user_answers, "user_comments":user_comments}
+    context = {"user_data": user_data, "user_questions": user_questions, "user_answers": user_answers,
+               "user_comments": user_comments}
     return render(request, "user_profile.html", context)

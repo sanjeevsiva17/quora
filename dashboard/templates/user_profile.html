@@ -23,6 +23,7 @@
                     {% for question in user_questions %}
                         <ul>
                             <li>{{question.question_text}}</li>
+                            <a href={% url 'delete_question' question.id %}>Delete</a>
                         </ul>
                     {% endfor %}
                 </div>
@@ -34,13 +35,13 @@
                 {% for answer in user_answers %}
                     <ul>
                         <li>
-
                             {{ answer.answer_text }}
                             <br>
                             Answered for
                             <br>
                             {{ answer.question.question_text }}
-                        </li>
+                        </li>                            <a href={% url 'delete_answer' answer.id %}>Delete</a>
+
                     </ul>
                 {% endfor %}
             </div>
@@ -56,7 +57,8 @@
                     {{ comment.comment_text }}
                     <br>
                     Commented for : {{ comment.answer.answer_text }}
-                </li>
+                </li>                    <a href={% url 'delete_comment' comment.id %}>Delete</a>
+
             </ul>
             {% endfor %}
         </div>
