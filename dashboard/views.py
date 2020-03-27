@@ -13,8 +13,14 @@ def index(request):
 
 
 def question(request, question_id):
+    """
+    Listing a particular question, answers, comments and votes
+
+    The logged in user can add answer only once
+    """
     question = get_object_or_404(Question, pk=question_id)
     final_answer = {}
+    # TODO: Use prefetch selected/related
     answer = Answer.objects.filter(question=question)
     for ans in answer:
         comments = Comment.objects.filter(answer=ans)
@@ -22,7 +28,7 @@ def question(request, question_id):
     editable = False
     form = CommentForm()
     if request.user.is_authenticated:
-        if Answer.objects.filter(question_id=question_id, user=request.user).exists():
+        if Answer.already_answered(question=question.id, user=request.user.id)
             editable = True
         else:
             editable = False
@@ -40,6 +46,12 @@ def question(request, question_id):
     return render(request, 'question.html',
                   {"question": question, "editable": editable, "form": form, "final_answer": final_answer})
 
+
+
+# TODO: Move comment logic to a separate function
+def add_comment(request):
+    if request.method == 'POST':
+        # add comment
 
 @login_required(login_url='/accounts/login/')
 def add_question(request):
@@ -126,6 +138,9 @@ def upvotes(request):
     if request.user.is_authenticated:
         user_id = request.POST.get("user")
         answer_id = request.POST.get("answer")
+
+        # TODO: refactor this to a model method
+        # Send the actual vote count
         vote = Vote.objects.filter(answer_id=answer_id, user_id=user_id)
         if vote.exists():
             vote.delete()
