@@ -26,32 +26,31 @@ def question(request, question_id):
         comments = Comment.objects.filter(answer=ans)
         final_answer[ans] = (comments, Vote.objects.filter(answer=ans).count())
     editable = False
-    form = CommentForm()
     if request.user.is_authenticated:
-        if Answer.already_answered(question=question.id, user=request.user.id)
+        if Answer.already_answered(question=question.id, user=request.user.id):
             editable = True
         else:
             editable = False
 
-        if request.method == "POST":
-            form = CommentForm(request.POST)
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.user = request.user
-                ans = get_object_or_404(Answer, pk=form.data["answer_id"])
-                post.answer = ans
-                post.save()
-        else:
-            form = CommentForm()
+    form = add_comment(request)
+
     return render(request, 'question.html',
                   {"question": question, "editable": editable, "form": form, "final_answer": final_answer})
 
-
-
-# TODO: Move comment logic to a separate function
+@login_required(login_url='/accounts/login/')
 def add_comment(request):
-    if request.method == 'POST':
-        # add comment
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            ans = get_object_or_404(Answer, pk=form.data["answer_id"])
+            post.answer = ans
+            post.save()
+    else:
+        form = CommentForm()
+    return form
+
 
 @login_required(login_url='/accounts/login/')
 def add_question(request):
@@ -139,17 +138,9 @@ def upvotes(request):
         user_id = request.POST.get("user")
         answer_id = request.POST.get("answer")
 
-        # TODO: refactor this to a model method
-        # Send the actual vote count
-        vote = Vote.objects.filter(answer_id=answer_id, user_id=user_id)
-        if vote.exists():
-            vote.delete()
-            msg = "deleted"
-            # return HttpResponse()
-        else:
-            Vote.objects.create(answer_id=answer_id, user_id=user_id)
-            msg = "created"
-        js = {"message": msg}
+        vote_count= Vote.upvote_or_delete(answer_id, user_id)
+
+        js = {"message": vote_count}
         return HttpResponse(json.dumps(js))
     else:
         messages.info(request, "Login to vote")

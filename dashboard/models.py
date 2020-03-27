@@ -34,8 +34,16 @@ class Vote(TimeStampMixin):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # count = models.IntegerField(default=0)
 
-    def upvote_or_delete(self):
-        pass
+    @classmethod
+    def upvote_or_delete(cls, answer_id, user_id):
+        vote = cls.objects.filter(answer_id=answer_id, user_id=user_id)
+        if vote.exists():
+            vote.delete()
+        else:
+            cls.objects.create(answer_id=answer_id, user_id=user_id)
+
+        return cls.count()
+
 
 
 class Comment(TimeStampMixin):
