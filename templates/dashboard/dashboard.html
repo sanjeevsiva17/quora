@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+        <br>
+    <br>
+    <br>
+
+<div class="container">
+
+  <div class="row">
+    <div class="col">
+
+    </div>
+    <div class="col">
+    <br>
+    <div >
+        {% for question in questions %}
+            <a href="/{{question.id}}">
+                {{question.question_text}}
+                <br>
+                Asked by: {{ question.user }}
+            </a>
+        <br>
+        <br>
+        {% endfor %}
+    </div>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+

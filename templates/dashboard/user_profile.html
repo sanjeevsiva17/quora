@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            </div>
+
+            <div class="col">
+                <h2 style="text-align: center">User Profile</h2>
+                <br>
+                <div>
+                    Username : {{ user.username }}
+
+                    {{ user.first_name }}
+                    {{ user.last_name }}
+                </div>
+
+            <br>
+            <br>
+
+                <div>
+                    <h3> Questions </h3>
+                    {% for question in user_questions %}
+                        <ul>
+                            <li>{{question.question_text}}</li>
+                            <a href={% url 'delete_question' question.id %}>Delete</a>
+                        </ul>
+                    {% endfor %}
+                </div>
+
+            <br>
+            <br>
+            <div>
+                <h3> Answers</h3>
+                {% for answer in user_answers %}
+                    <ul>
+                        <li>
+                            {{ answer.answer_text }}
+                            <br>
+                            Answered for
+                            <br>
+                            {{ answer.question.question_text }}
+                        </li>                            <a href={% url 'delete_answer' answer.id %}>Delete</a>
+
+                    </ul>
+                {% endfor %}
+            </div>
+
+        <br>
+        <br>
+        <div>
+            <h3>Comments</h3>
+            {% for comment in user_comments %}
+
+            <ul>
+                <li>
+                    {{ comment.comment_text }}
+                    <br>
+                    Commented for : {{ comment.answer.answer_text }}
+                </li>                    <a href={% url 'delete_comment' comment.id %}>Delete</a>
+
+            </ul>
+            {% endfor %}
+        </div>
+            </div>
+
+            <div class="col">
+            </div>
+        </div>
+    </div>
+{% endblock %}

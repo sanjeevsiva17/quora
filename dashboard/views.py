@@ -7,6 +7,7 @@ from .forms import QuestionForm, AnswerForm, CommentForm
 from django.contrib import messages
 import json
 
+
 def index(request):
     questions = Question.objects.all()
     return render(request, "dashboard.html", {"questions": questions})
@@ -20,10 +21,10 @@ def question(request, question_id):
     """
     question = get_object_or_404(Question, pk=question_id)
     final_answer = {}
-    # TODO: Use prefetch selected/related
-    answer = Answer.objects.filter(question=question)
+    answer = Answer.objects.prefetch_related('comment_set').filter(question=question)
+
     for ans in answer:
-        comments = Comment.objects.filter(answer=ans)
+        comments = ans.comment_set.all()
         final_answer[ans] = (comments, Vote.objects.filter(answer=ans).count())
     editable = False
     if request.user.is_authenticated:
@@ -36,6 +37,7 @@ def question(request, question_id):
 
     return render(request, 'question.html',
                   {"question": question, "editable": editable, "form": form, "final_answer": final_answer})
+
 
 @login_required(login_url='/accounts/login/')
 def add_comment(request):
@@ -138,7 +140,7 @@ def upvotes(request):
         user_id = request.POST.get("user")
         answer_id = request.POST.get("answer")
 
-        vote_count= Vote.upvote_or_delete(answer_id, user_id)
+        vote_count = Vote.upvote_or_delete(answer_id, user_id)
 
         js = {"message": vote_count}
         return HttpResponse(json.dumps(js))
