@@ -10,7 +10,7 @@ import json
 
 def index(request):
     questions = Question.objects.all()
-    return render(request, "dashboard.html", {"questions": questions})
+    return render(request, "dashboard/dashboard.html", {"questions": questions})
 
 
 def question(request, question_id):
@@ -35,7 +35,7 @@ def question(request, question_id):
 
     form = add_comment(request)
 
-    return render(request, 'question.html',
+    return render(request, 'dashboard/question.html',
                   {"question": question, "editable": editable, "form": form, "final_answer": final_answer})
 
 
@@ -67,7 +67,7 @@ def add_question(request):
         else:
             form = QuestionForm()
         context = {'form': form}
-        return render(request, 'question_form.html', context)
+        return render(request, 'dashboard/question_form.html', context)
     else:
         messages.info(request, "Login to add question")
         return redirect('login')
@@ -88,7 +88,7 @@ def add_answer(request, question_id):
         else:
             form = AnswerForm()
         context = {'form': form, 'question': ques}
-        return render(request, 'answer_form.html', context)
+        return render(request, 'dashboard/answer_form.html', context)
     else:
         messages.info(request, "Login to answer")
         return redirect('login')
@@ -110,7 +110,7 @@ def edit_answer(request, question_id):
         else:
             form = AnswerForm(instance=instance)
         context = {'form': form, 'question': ques}
-        return render(request, 'edit_answer.html', context)
+        return render(request, 'dashboard/edit_answer.html', context)
     else:
         messages.info(request, "Login to answer")
         return redirect('login')
@@ -157,4 +157,4 @@ def user_profile(request):
     user_comments = Comment.objects.filter(user_id=user_data.id)
     context = {"user_data": user_data, "user_questions": user_questions, "user_answers": user_answers,
                "user_comments": user_comments}
-    return render(request, "user_profile.html", context)
+    return render(request, "dashboard/user_profile.html", context)
