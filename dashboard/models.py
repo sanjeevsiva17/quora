@@ -31,7 +31,7 @@ class Answer(TimeStampMixin):
 
 class Vote(TimeStampMixin):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     # count = models.IntegerField(default=0)
 
     @classmethod
@@ -40,9 +40,10 @@ class Vote(TimeStampMixin):
         if vote.exists():
             vote.delete()
         else:
-            cls.objects.create(answer_id=answer_id, user_id=user_id)
+            Vote.objects.create(answer_id=answer_id, user_id=user_id)
 
-        return vote.count()
+        count = cls.objects.filter(answer_id=answer_id).count()
+        return count
 
 
 
