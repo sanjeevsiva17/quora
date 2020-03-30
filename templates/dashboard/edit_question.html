@@ -10,10 +10,9 @@
     <div class="col">
     </div>
     <div class="col">
-        <h2 style="text-align: center">Edit Answer</h2>
+        <h2 style="text-align: center">Edit Question</h2>
         <br>
 
-        <h4>{{question.question_text}}</h4>
         <Form method="POST" action="">
             {% csrf_token %}
             {{form.as_p}}

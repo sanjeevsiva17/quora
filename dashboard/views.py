@@ -26,9 +26,10 @@ def question(request, question_id):
     for ans in answer:
         comments = ans.comment_set.all()
         final_answer[ans] = (comments, Vote.objects.filter(answer=ans).count())
+
     editable = False
     if request.user.is_authenticated:
-        if Answer.already_answered(question=question.id, user=request.user.id):
+        if Answer.already_answered(question_id=question.id, user_id=request.user.id):
             editable = True
         else:
             editable = False
@@ -117,6 +118,28 @@ def edit_answer(request, question_id):
 
 
 @login_required(login_url='/accounts/login/')
+def edit_question(request, question_id):
+    if request.user.is_authenticated:
+        ques = get_object_or_404(Question, pk=question_id)
+        if request.method == "POST":
+            form = QuestionForm(request.POST, instance=ques)
+            if form.is_valid():
+                ans = form.save(commit=False)
+                ans.user = request.user
+                ans.question = ques
+                ans.save()
+                return redirect('index')
+        else:
+            form = QuestionForm(instance=ques)
+        context = {'form': form, 'question': ques}
+        return render(request, 'dashboard/edit_question.html', context)
+    else:
+        messages.info(request, "Login to answer")
+        return redirect('login')
+
+
+
+@login_required(login_url='/accounts/login/')
 def delete_answer(request, answer_id):
     Answer.objects.filter(id=answer_id).delete()
     return redirect('user_profile')
@@ -142,7 +165,7 @@ def upvotes(request):
 
         vote_count = Vote.upvote_or_delete(answer_id, user_id)
 
-        js = {"message": vote_count}
+        js = {"vote": vote_count, "answer":answer_id}
         return HttpResponse(json.dumps(js))
     else:
         messages.info(request, "Login to vote")

@@ -42,7 +42,7 @@ class Vote(TimeStampMixin):
         else:
             cls.objects.create(answer_id=answer_id, user_id=user_id)
 
-        return cls.count()
+        return vote.count()
 
 
 

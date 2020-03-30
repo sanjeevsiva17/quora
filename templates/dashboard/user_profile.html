@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/base.html' %}
 {% block content %}
     <div class="container">
         <div class="row">
@@ -24,6 +24,8 @@
                         <ul>
                             <li>{{question.question_text}}</li>
                             <a href={% url 'delete_question' question.id %}>Delete</a>
+                             <a href={% url 'edit_question' question.id %}>Edit your question</a>
+
                         </ul>
                     {% endfor %}
                 </div>
@@ -41,6 +43,9 @@
                             <br>
                             {{ answer.question.question_text }}
                         </li>                            <a href={% url 'delete_answer' answer.id %}>Delete</a>
+                                             <a href={% url 'edit_answer' answer.question.id %}>Edit your answer</a>
+
+
 
                     </ul>
                 {% endfor %}
@@ -58,6 +63,8 @@
                     <br>
                     Commented for : {{ comment.answer.answer_text }}
                 </li>                    <a href={% url 'delete_comment' comment.id %}>Delete</a>
+                                         <a href={% url 'edit_comment' comment.id %}>Edit your comment</a>
+
 
             </ul>
             {% endfor %}
