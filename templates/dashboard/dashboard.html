@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/base.html' %}
 {% block content %}
 
         <br>
@@ -18,7 +18,11 @@
             <a href="/{{question.id}}">
                 {{question.question_text}}
                 <br>
-                Asked by: {{ question.user }}
+                {% if request.user == question.user %}
+                        Asked by: me
+                {% else %}
+                        Asked by: {{ question.user }}
+                {% endif %}
             </a>
         <br>
         <br>

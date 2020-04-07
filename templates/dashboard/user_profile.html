@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/base.html' %}
 {% block content %}
     <div class="container">
         <div class="row">
@@ -23,7 +23,9 @@
                     {% for question in user_questions %}
                         <ul>
                             <li>{{question.question_text}}</li>
-                            <a href={% url 'delete_question' question.id %}>Delete</a>
+                            <a href={% url 'delete_question' question.id %} onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                             <a href={% url 'edit_question' question.id %}>Edit your question</a>
+
                         </ul>
                     {% endfor %}
                 </div>
@@ -40,7 +42,10 @@
                             Answered for
                             <br>
                             {{ answer.question.question_text }}
-                        </li>                            <a href={% url 'delete_answer' answer.id %}>Delete</a>
+                        </li>                            <a href={% url 'delete_answer' answer.id %} onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                             <a href={% url 'edit_answer' answer.question.id %}>Edit your answer</a>
+
+
 
                     </ul>
                 {% endfor %}
@@ -57,7 +62,9 @@
                     {{ comment.comment_text }}
                     <br>
                     Commented for : {{ comment.answer.answer_text }}
-                </li>                    <a href={% url 'delete_comment' comment.id %}>Delete</a>
+                </li>                    <a href={% url 'delete_comment' comment.id %} onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+
+
 
             </ul>
             {% endfor %}

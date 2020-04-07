@@ -20,7 +20,16 @@ class AnswerForm(forms.ModelForm):
         }
 
 
+# class QuestionEditForm(forms.ModelForm):
+#     class Meta:
+#         model = Question
+#         fields = ['question_text', ]
+#         widgets = {
+#             'question_text': forms.Textarea(attrs={'rows': 20, 'cols': 100}),
+#         }
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
-        model= Comment
+        model = Comment
         fields = ['comment_text', ]

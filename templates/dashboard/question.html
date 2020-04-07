@@ -1,5 +1,5 @@
 
-{% extends 'base.html' %}
+{% extends 'dashboard/base.html' %}
 {% block content %}
 
 <br>
@@ -25,12 +25,22 @@
                 <br>
                 <div>
                       votes: <label id="votes-{{ answer.id }}">{{comments.1}}</label>
-                    <input type="button" name="upvote" value="upvote" onclick=vote({{request.user.id}},{{answer.id}})>
+
+                    {% if request.user.id is  None %}
+                        <br>
+                        Login to vote
+                     {% else %}
+                        <input type="button" name="upvote" value="upvote" onclick=vote({{request.user.id}},{{answer.id}})>
+                    {% endif %}
                 </div>
                 <div>
                     {% for comm in comments.0 %}
                         <br>
-                            user: {{ comm.user.username }}
+                            {% if comm.user == request.user %}
+                                user : me
+                            {% else %}
+                                user: {{ comm.user.username }}
+                            {% endif %}
                             comments: {{ comm.comment_text }}
                     {% endfor %}
             </div>
@@ -40,7 +50,12 @@
                 {% csrf_token %}
                 {{form.as_p}}
                 <input type="text" style="visibility: hidden" name="answer_id" value="{{ answer.id }}">
+                    {% if request.user.id is  None %}
+                        <br>
+                        Login to Comment
+                     {% else %}
                 <input type="submit" name="comment" value="comment">
+            {% endif %}
             </Form>
 
             <br>
@@ -50,9 +65,15 @@
     <div class="col">
         {% if editable == True %}
             <a href="{{ question.id }}/edit/">Edit your answer</a>
+            <br>
         {% else %}
             <a href="{{ question.id }}/answer/">Add your answer</a>
         {% endif %}
+    <br>
+    <br>
+    {% if question.user == request.user %}
+        <a href={% url 'delete_question' question.id %} onclick="return confirm('Are you sure you want to delete this item?');">Delete Question</a>
+    {% endif %}
     </div>
   </div>
 </div>
